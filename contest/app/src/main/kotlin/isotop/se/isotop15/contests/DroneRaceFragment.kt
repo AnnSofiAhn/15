@@ -1,17 +1,15 @@
 package isotop.se.isotop15.contests
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import isotop.se.isotop15.App
 import isotop.se.isotop15.MainActivity
 import isotop.se.isotop15.R
 import isotop.se.isotop15.models.Contestant
@@ -46,6 +44,8 @@ class DroneRaceFragment : Fragment() {
     @OnClick(R.id.start_race_button)
     fun startRaceClicked() {
         infoView.text = "Nu startar racet!"
+        val app = context.applicationContext as App
+        app.dronisBackend.startFakeGame(3)
     }
 
     companion object {

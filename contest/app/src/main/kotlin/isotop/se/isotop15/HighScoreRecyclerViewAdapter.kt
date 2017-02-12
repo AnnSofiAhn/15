@@ -10,7 +10,6 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import isotop.se.isotop15.models.HighScore
-import kotlin.comparisons.compareValuesBy
 
 class HighScoreRecyclerViewAdapter() : RecyclerView.Adapter<HighScoreRecyclerViewAdapter.ViewHolder>() {
 
@@ -18,7 +17,7 @@ class HighScoreRecyclerViewAdapter() : RecyclerView.Adapter<HighScoreRecyclerVie
 
     private val scores = mutableListOf<HighScore>()
 
-    fun setScores(scores: MutableList<HighScore>) {
+    fun setScores(scores: List<HighScore>) {
         this.scores.clear()
         this.scores.addAll(scores.sorted())
         notifyDataSetChanged()
@@ -40,8 +39,8 @@ class HighScoreRecyclerViewAdapter() : RecyclerView.Adapter<HighScoreRecyclerVie
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.score = scores[position]
-        holder.nameView.text = holder.score.name
-        holder.scoreView.text = "${holder.score.score} poäng"
+        holder.nameView.text = holder.score.contestantName
+        holder.scoreView.text = "${holder.score.points} poäng"
     }
 
     override fun getItemCount(): Int {
@@ -87,8 +86,8 @@ class HighScoreRecyclerViewAdapter() : RecyclerView.Adapter<HighScoreRecyclerVie
 
             Log.d(TAG, "areItemsTheSame: $new vs $old")
 
-            if (old.name == new.name) {
-                return old.score == new.score
+            if (old.contestant_id == new.contestant_id) {
+                return old.points == new.points
             } else {
                 return false
             }

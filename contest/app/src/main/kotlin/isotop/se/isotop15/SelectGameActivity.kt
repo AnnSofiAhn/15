@@ -7,6 +7,7 @@ import android.util.Log
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import isotop.se.isotop15.models.Game
 
 class SelectGameActivity : AppCompatActivity() {
     val TAG = "SelectGameActivity"

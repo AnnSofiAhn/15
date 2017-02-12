@@ -10,11 +10,12 @@ import android.util.Log
  * Created on 17/02/07.
  */
 
-data class Contestant(val name: String, val image: String): Parcelable {
+data class Contestant(val name: String, val image: String, val id: Int): Parcelable {
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.writeString(name)
         dest?.writeString(image)
+        dest?.writeInt(id)
     }
 
     override fun describeContents(): Int {
@@ -28,7 +29,8 @@ data class Contestant(val name: String, val image: String): Parcelable {
                 Log.d(ContentValues.TAG, "createFromParcel")
                 val name = source?.readString() ?: ""
                 val image = source?.readString() ?: ""
-                return Contestant(name, image)
+                val id = source?.readInt() ?: -1
+                return Contestant(name, image, id)
             }
 
             override fun newArray(size: Int): Array<out Contestant?> {

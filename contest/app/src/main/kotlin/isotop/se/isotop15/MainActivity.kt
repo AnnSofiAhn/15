@@ -14,6 +14,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import isotop.se.isotop15.contests.DroneRaceFragment
 import isotop.se.isotop15.models.Contestant
+import isotop.se.isotop15.models.Game
 import java.util.*
 
 class MainActivity : AppCompatActivity() {

@@ -18,6 +18,7 @@ import android.view.MenuItem
 import android.view.View
 import butterknife.BindView
 import butterknife.ButterKnife
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import isotop.se.isotop15.models.Contestant
 
@@ -49,13 +50,6 @@ class ContestantsActivity : AppCompatActivity() {
         toolbar.title = "Välj deltagare"
         toolbar.inflateMenu(R.menu.contestants)
         toolbar.setOnMenuItemClickListener(MenuItemListener())
-
-        adapter.addContestant(Contestant("Veronika Ekström",
-                                         "https://robohash.org/Veronika Ekström.png?size=256x256"))
-        adapter.addContestant(Contestant("Eric Nilsson",
-                                         "https://robohash.org/Eric Nilsson.png?size=256x256"))
-        adapter.addContestant(Contestant("Erik Manberger",
-                                         "https://robohash.org/Erik Manberger.png?size=256x256"))
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
     }
@@ -93,18 +87,19 @@ class ContestantsActivity : AppCompatActivity() {
             // TODO: As in...read JSON from tag with name?
 
             val app = application as App
-            app.api.getContestantByTagId(result)
+            app.gameBackend.getContestantByTagId(result)
                     .subscribeOn(Schedulers.io())
-                    .subscribe ({
-                                    // onDone
-                                    Log.d(TAG, "Got something: $it")
-                                    addContestant(it.copy(image = getImageUrlFromName(it)))
-                                }, {
-                                    // onError
-                                    Log.w(TAG, "Couldn't get the user from the tag ID", it)
-                                }, {
-                        // onComplete
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe (
+                    {
+                        // onDone
+                        Log.d(TAG, "Got something: $it")
+                        addContestant(it.copy(image = getImageUrlFromName(it)))
                         snackbar.dismiss()
+                    }, {
+                        // onError
+                        Log.w(TAG, "Couldn't get the user from the tag ID", it)
+                        snackbar.setText("Kunde inte hämta deltagaren")
                     })
         }
     }
