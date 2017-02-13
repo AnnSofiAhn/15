@@ -1,10 +1,7 @@
 package isotop.se.isotop15.models
 
 import io.reactivex.Observable
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * @author Ann-Sofi Åhn
@@ -15,6 +12,11 @@ interface GameBackend {
     @Headers("Accept: application/json")
     @GET("activities/{id}/scores")
     fun getScores(@Path("id") id: Int): Observable<List<HighScore>>
+
+    @Headers("Accept: application/json", "Authorization: Basic YW56bzpjaG9rbGFkYm9sbA==")
+    @POST("contestants/{tagId}/scores")
+    fun postContestantScore(@Path("tagId") tagId: String,
+                            @Body score: HighScore): Observable<HighScore>
 
     @Headers("Accept: application/json")
     @GET("contestants/{tagId}")

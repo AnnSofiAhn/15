@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import isotop.se.isotop15.models.HighScore
 
 /**
  * A fragment representing a list of HighScores.
@@ -37,30 +36,24 @@ class HighScoreFragment : Fragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({
-                    // onNext
-                    Log.d("HighScoreFragment", "Score: $it")
-                    val ids = it.map(HighScore::id)
+                    val ids = it.map{it.contestant_id}.distinct<Int>()
                     app.gameBackend.getContestants(ids = ids)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ contestants ->
-                                // onNext
-                                Log.d("HighScoreFragment", "Contestants? $contestants")
                                 val scores = it.map { score ->
-                                    val contestant = contestants.find { it.id == score.contestant_id }
-                                    if (contestant != null) {
-                                        score.copy(contestantName = contestant.name)
+                                    val c = contestants.find { it.id == score.contestant_id }
+                                    if (c != null) {
+                                        score.copy(contestantName = c.name)
                                     } else{
                                         score
                                     }
                                 }
                                 adapter.setScores(scores)
                             }, {
-                                // onError
                                 Log.d("HighScoreFragment", "Got an error!", it)
                             })
                     }, {
-                    // onError
                     Log.d("HighScoreFragment", "Got some error here", it)
                 })
 

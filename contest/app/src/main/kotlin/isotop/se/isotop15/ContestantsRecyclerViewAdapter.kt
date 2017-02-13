@@ -15,6 +15,7 @@ import com.github.florent37.picassopalette.PicassoPalette
 import com.squareup.picasso.Picasso
 import isotop.se.isotop15.ContestantsRecyclerViewAdapter.ViewHolder
 import isotop.se.isotop15.models.Contestant
+import isotop.se.isotop15.utils.ContestantClickListener
 import java.util.*
 
 
@@ -23,13 +24,16 @@ import java.util.*
  *
  * Created on 17/01/27.
  */
-class ContestantsRecyclerViewAdapter(val context: Context): RecyclerView.Adapter<ViewHolder>() {
+class ContestantsRecyclerViewAdapter(val context: Context,
+                                     val listener: ContestantClickListener? = null) : RecyclerView.Adapter<ViewHolder>() {
+
     val TAG = "ContestantsStuff"
 
     private val contestants = ArrayList<Contestant>()
     private val defaultColor = context.resources.getColor(R.color.cardview_light_background)
 
     fun addContestant(contestant: Contestant) {
+        Log.d(TAG, "Adding contestant: $contestant")
         contestants.add(contestant)
         notifyItemInserted(contestants.size - 1)
     }
@@ -45,7 +49,6 @@ class ContestantsRecyclerViewAdapter(val context: Context): RecyclerView.Adapter
 
         Picasso.with(context)
                 .load(contestant.image)
-                .placeholder(R.drawable.ic_person_black_24dp)
                 .error(R.drawable.ic_person_add_black_24dp)
                 .into(holder.imageView,
                       PicassoPalette.with(contestant.image, holder.imageView)
@@ -75,8 +78,10 @@ class ContestantsRecyclerViewAdapter(val context: Context): RecyclerView.Adapter
 
         init {
             ButterKnife.bind(this, itemView)
+            itemView.setOnClickListener({
+                Log.d(TAG, "Clicked on ${nameView.text}")
+                listener?.onContestantClicked(contestants[adapterPosition])
+            })
         }
     }
-
-
 }

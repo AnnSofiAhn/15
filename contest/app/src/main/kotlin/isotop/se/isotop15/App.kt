@@ -24,7 +24,6 @@ class App: Application() {
 
         Log.d("App", "Starting the darned thing")
         val picasso = Picasso.Builder(this)
-                .loggingEnabled(true)
                 .build()
 
         try {

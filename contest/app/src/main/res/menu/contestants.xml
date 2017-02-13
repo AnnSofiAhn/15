@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Fortsätt"
-          android:id="@+id/menu_forward"
-          app:showAsAction="always"
-          android:icon="@drawable/ic_arrow_forward_white_24dp"/>
+    <item
+        android:id="@+id/menu_back"
+        android:icon="@drawable/ic_arrow_back_white_24dp"
+        android:title="Välj spel"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_forward"
+        android:icon="@drawable/ic_arrow_forward_white_24dp"
+        android:title="Fortsätt"
+        app:showAsAction="always"/>
 
 </menu>

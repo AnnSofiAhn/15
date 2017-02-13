@@ -1,23 +1,27 @@
 package isotop.se.isotop15
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.View
 import butterknife.BindView
 import butterknife.ButterKnife
-import isotop.se.isotop15.contests.DroneRaceFragment
+import isotop.se.isotop15.contests.ContestCallbacks
+import isotop.se.isotop15.contests.ContestFragment
 import isotop.se.isotop15.models.Contestant
 import isotop.se.isotop15.models.Game
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ContestCallbacks {
 
     val TAG = "MainActivity"
 
@@ -35,8 +39,7 @@ class MainActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         setSupportActionBar(toolbar)
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+
         sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         viewPager.adapter = sectionsPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
@@ -65,21 +68,34 @@ class MainActivity : AppCompatActivity() {
                 selectedGame = Game.values()[resultCode]
                 toolbar.title = selectedGame.title
                 Log.d(TAG, "Selected $selectedGame")
+                sectionsPagerAdapter.destroyItem(viewPager.rootView, 0, null)
             }
             REQUEST_CODE_GET_CONTESTANTS -> {
-                contestants.clear()
-                val results = data?.getParcelableArrayListExtra<Contestant>(RESULT_CONTESTANTS)
-                results?.filterNotNull()
-                       ?.forEach { contestants.add(it) }
-                Log.d(TAG, "Things: $contestants")
+                if (resultCode == Activity.RESULT_OK) {
+                    contestants.clear()
+                    val results = data?.getParcelableArrayListExtra<Contestant>(RESULT_CONTESTANTS)
+                    results?.filterNotNull()?.forEach { contestants.add(it) }
+
+                    val fragment = sectionsPagerAdapter.getItem(0) as ContestFragment
+                    fragment.setContestants(contestants)
+                } else {
+                    selectedGame = Game.NONE
+                }
             }
         }
+    }
+
+    override fun onContestFinished() {
+        Log.d(TAG, "onContestFinished")
+        contestants.clear()
+        onResume()
     }
 
     companion object {
         val REQUEST_CODE_SELECT_GAME = 42
         val REQUEST_CODE_GET_CONTESTANTS = 1337
         val RESULT_CONTESTANTS = "RESULT_CONTESTANTS"
+        val RESULT_CLEAR_GAME = "RESULT_CLEAR_GAME"
     }
 
     /**
@@ -87,13 +103,28 @@ class MainActivity : AppCompatActivity() {
      * one of the sections/tabs/pages.
      */
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+        val app = applicationContext as App
+        var contestFragment: ContestFragment? = null
+        var highScoreFragment: HighScoreFragment? = null
 
         override fun getItem(position: Int): Fragment {
+            Log.d(TAG, "Getting item at $position")
+
             when (position) {
-                0 -> return DroneRaceFragment.newInstance(contestants)
-                1 -> return HighScoreFragment.newInstance(position)
-                else -> return DroneRaceFragment.newInstance(contestants)
+                0 -> {
+                    if (contestFragment == null) {
+                        contestFragment = ContestFragment.newInstance(app, selectedGame)
+                        Log.d(TAG, "ContestFragment: $contestFragment")
+                    }
+                    return contestFragment as Fragment
+                }
+                1 -> return highScoreFragment ?: HighScoreFragment.newInstance(selectedGame.id)
+                else -> return ContestFragment.newInstance(app, selectedGame)
             }
+        }
+
+        override fun getItemPosition(item: Any?): Int {
+            return PagerAdapter.POSITION_NONE
         }
 
         override fun getCount(): Int {
@@ -113,6 +144,15 @@ class MainActivity : AppCompatActivity() {
                 0 -> return 42L
                 1 -> return 1337L
                 else -> return 666L
+            }
+        }
+
+        override fun destroyItem(container: View?, position: Int, item: Any?) {
+            Log.d(TAG, "destroyItem at $position")
+            if (position == 0) {
+                contestFragment = null
+            } else {
+                highScoreFragment = HighScoreFragment.newInstance(selectedGame.id)
             }
         }
     }

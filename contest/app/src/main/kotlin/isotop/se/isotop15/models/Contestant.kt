@@ -10,16 +10,21 @@ import android.util.Log
  * Created on 17/02/07.
  */
 
-data class Contestant(val name: String, val image: String, val id: Int): Parcelable {
+data class Contestant(val name: String, val image: String, val id: Int, val slug: String?): Parcelable {
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.writeString(name)
         dest?.writeString(image)
         dest?.writeInt(id)
+        dest?.writeString(slug)
     }
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    override fun toString(): String {
+        return "Contestant(name='$name', slug=$slug)"
     }
 
     companion object {
@@ -30,7 +35,8 @@ data class Contestant(val name: String, val image: String, val id: Int): Parcela
                 val name = source?.readString() ?: ""
                 val image = source?.readString() ?: ""
                 val id = source?.readInt() ?: -1
-                return Contestant(name, image, id)
+                val slug = source?.readString() ?: ""
+                return Contestant(name, image, id, slug)
             }
 
             override fun newArray(size: Int): Array<out Contestant?> {

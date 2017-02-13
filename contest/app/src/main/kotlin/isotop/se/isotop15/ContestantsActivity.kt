@@ -3,7 +3,6 @@ package isotop.se.isotop15
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
-import android.graphics.Rect
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
@@ -15,12 +14,12 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import butterknife.BindView
 import butterknife.ButterKnife
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import isotop.se.isotop15.models.Contestant
+import isotop.se.isotop15.utils.MarginItemDecoration
 
 class ContestantsActivity : AppCompatActivity() {
 
@@ -40,12 +39,11 @@ class ContestantsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_contestants)
         ButterKnife.bind(this)
 
-        val context = recyclerView.context
-        adapter = ContestantsRecyclerViewAdapter(context)
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        adapter = ContestantsRecyclerViewAdapter(this)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
-        recyclerView.addItemDecoration(MarginItemDecoration())
+        recyclerView.addItemDecoration(MarginItemDecoration(resources))
 
         toolbar.title = "Välj deltagare"
         toolbar.inflateMenu(R.menu.contestants)
@@ -92,12 +90,10 @@ class ContestantsActivity : AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe (
                     {
-                        // onDone
                         Log.d(TAG, "Got something: $it")
                         addContestant(it.copy(image = getImageUrlFromName(it)))
                         snackbar.dismiss()
                     }, {
-                        // onError
                         Log.w(TAG, "Couldn't get the user from the tag ID", it)
                         snackbar.setText("Kunde inte hämta deltagaren")
                     })
@@ -105,7 +101,7 @@ class ContestantsActivity : AppCompatActivity() {
     }
 
     private fun getImageUrlFromName(it: Contestant): String {
-        return baseImageUrl + it.name + imageUrlSuffix
+        return baseImageUrl + it.name.hashCode() + imageUrlSuffix
     }
 
     override fun onResume() {
@@ -119,7 +115,6 @@ class ContestantsActivity : AppCompatActivity() {
     }
 
     private fun setupForegroundDispatch() {
-        Log.d(TAG, "setupForegroundDispatch")
         val intent = Intent(applicationContext, this.javaClass)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
@@ -146,20 +141,16 @@ class ContestantsActivity : AppCompatActivity() {
                     finish()
                     return true
                 }
+                R.id.menu_back -> {
+                    val intent = Intent()
+                    intent.putExtra(MainActivity.RESULT_CLEAR_GAME, true)
+                    setResult(Activity.RESULT_CANCELED, intent)
+                    finish()
+                    return false
+                }
                 else -> return false
             }
         }
 
-    }
-
-    inner class MarginItemDecoration: RecyclerView.ItemDecoration() {
-        val offset = resources.getDimensionPixelSize(R.dimen.card_margin)
-        override fun getItemOffsets(outRect: Rect,
-                                    view: View?,
-                                    parent: RecyclerView?,
-                                    state: RecyclerView.State?) {
-            super.getItemOffsets(outRect, view, parent, state)
-            outRect.set(offset, offset, offset, offset)
-        }
     }
 }
