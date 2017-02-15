@@ -38,14 +38,10 @@ abstract class ContestFragment(val app: App) : Fragment() {
     }
 
     fun postScoreForContestant(contestant: Contestant, points: Int, lapTime: String? = null) {
-        val score = HighScore(null,
-                              points,
-                              null,
-                              null,
-                              getActivityId(),
-                              contestant.id,
-                              lapTime,
-                              contestant.name)
+        val score = HighScore(points = points,
+                              activityId = getActivityId(),
+                              contestantId = contestant.id,
+                              lapTime = lapTime)
 
         val tagId = contestant.slug!!
         app.gameBackend.postContestantScore(tagId, score)

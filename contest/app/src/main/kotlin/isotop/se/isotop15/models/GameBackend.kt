@@ -25,6 +25,4 @@ interface GameBackend {
     @Headers("Accept: application/json")
     @GET("contestants/")
     fun getContestants(@Query( "ids") ids: List<Int>): Observable<Array<Contestant>>
-
-    // GET /api/contestants?ids[]=1&ids[]=2&...
 }

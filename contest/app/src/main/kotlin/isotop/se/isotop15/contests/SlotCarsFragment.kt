@@ -65,7 +65,6 @@ class SlotCarsFragment(app: App): ContestFragment(app) {
 
     override fun contestantsUpdated() {
         Log.d(TAG, "contestantsUpdated")
-
     }
 
     override fun getActivityId(): Int {
@@ -83,7 +82,19 @@ class SlotCarsFragment(app: App): ContestFragment(app) {
                     .subscribe({
                         Log.d(TAG, "Got something back! $it")
                         val color = getControllerColor(it.controller)
-                        val message = it.error ?: "${it.name} har $color kontroll"
+                        var message = it.error ?: "${it.name} har $color kontroll"
+
+                        if (message == "nouser") {
+                            message = "Hittade inte användaren, vänligen försök igen om några minuter"
+                            app.slotCarsBackend.requestDatabaseRefresh()
+                                    .subscribeOn(Schedulers.io())
+                                    .subscribe({
+                                        Log.d(TAG, "Asked the slot cars backend to refresh users")
+                                    }, {
+                                        Log.w(TAG, "Got an error when asking the slot cars backend to refresh users", it)
+                                    })
+                        }
+
                         AlertDialog.Builder(context)
                                 .setMessage(message)
                                 .setPositiveButton(android.R.string.ok, {ignore, id ->

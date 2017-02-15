@@ -48,7 +48,7 @@ class DroneRaceFragment(app: App) : ContestFragment(app) {
     @OnClick(R.id.start_race_button)
     fun startRaceClicked() {
         infoView.text = "Nu startar racet!"
-        app.dronisBackend.startFakeGame(3)
+        app.dronisBackend.startGame()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(StartRaceConsumer(app), StartRaceErrorConsumer())
@@ -56,11 +56,10 @@ class DroneRaceFragment(app: App) : ContestFragment(app) {
 
     @OnClick(R.id.end_race_button)
     fun endRaceClicked() {
-        val points = Math.random() * 100
         val contestant = contestants.first()
         val lapTime = lastResponse?.data?.duration
 
-        postScoreForContestant(contestant, points.toInt(), lapTime?.toString())
+        postScoreForContestant(contestant, POINTS_FOR_COMPLETION, lapTime?.toString())
     }
 
     override fun onResume() {
@@ -88,6 +87,7 @@ class DroneRaceFragment(app: App) : ContestFragment(app) {
 
     companion object {
         val TAG = "DroneRaceFragment"
+        val POINTS_FOR_COMPLETION = 5
     }
 
     inner class StartRaceConsumer(val app: App): Consumer<DronisResponse> {
@@ -103,7 +103,7 @@ class DroneRaceFragment(app: App) : ContestFragment(app) {
             subscription?.dispose()
             subscription = Observable.interval(0, 1, TimeUnit.SECONDS)
                     .subscribeOn(Schedulers.io())
-                    .flatMap { tick -> app.dronisBackend.getFakeTime() }
+                    .flatMap { tick -> app.dronisBackend.getTime() }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         if (it.data.finished) {

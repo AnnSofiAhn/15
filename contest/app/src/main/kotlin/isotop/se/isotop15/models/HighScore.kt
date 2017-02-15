@@ -8,13 +8,13 @@ import kotlin.comparisons.compareValuesBy
  *
  * Created on 17/02/07.
  */
-data class HighScore(val id: Int?,
+data class HighScore(val id: Int? = null,
                      val points: Int,
-                     @SerializedName("created_at") val createdAt: String?,
-                     @SerializedName("updated_at") val updatedAt: String?,
+                     @SerializedName("created_at") val createdAt: String? = null,
+                     @SerializedName("updated_at") val updatedAt: String? = null,
                      @SerializedName("activity_id") val activityId: Int,
                      @SerializedName("contestant_id") val contestantId: Int,
-                     @SerializedName("laptime") val lapTime: String?,
+                     @SerializedName("laptime") val lapTime: String? = null,
                      val contestantName: String = "") : Comparable<HighScore> {
 
     // This actually returns inverted, to support sorting by descending scores

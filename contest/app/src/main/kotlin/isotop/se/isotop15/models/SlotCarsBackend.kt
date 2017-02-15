@@ -15,6 +15,9 @@ interface SlotCarsBackend {
     @GET("json/?action=startDropin")
     fun startPlaying(@Query("u") slug: String): Observable<SlotCarsResponse>
 
+    @GET("/json/?action=getUsers")
+    fun requestDatabaseRefresh(): Observable<Unit>
+
     data class SlotCarsResponse(@SerializedName("Name") val name: String,
                                 @SerializedName("Controller") val controller: Int,
                                 val error: String?)

@@ -15,10 +15,12 @@ import android.util.Log
 import android.view.View
 import butterknife.BindView
 import butterknife.ButterKnife
+import io.reactivex.schedulers.Schedulers
 import isotop.se.isotop15.contests.ContestCallbacks
 import isotop.se.isotop15.contests.ContestFragment
 import isotop.se.isotop15.models.Contestant
 import isotop.se.isotop15.models.Game
+import isotop.se.isotop15.models.HighScore
 import java.util.*
 
 class MainActivity : AppCompatActivity(), ContestCallbacks {
@@ -74,7 +76,10 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
                     val results = data?.getParcelableArrayListExtra<Contestant>(RESULT_CONTESTANTS)
                     results?.filterNotNull()
                             ?.distinctBy { it.slug }
-                            ?.forEach { contestants.add(it) }
+                            ?.forEach {
+                                contestants.add(it)
+                                postScoreForParticipation(it)
+                            }
 
                     val fragment = sectionsPagerAdapter.getItem(0) as ContestFragment
                     fragment.setContestants(contestants)
@@ -83,6 +88,18 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
                 }
             }
         }
+    }
+
+    private fun postScoreForParticipation(contestant: Contestant) {
+        Log.d(TAG, "postScoreForParticipation: $contestant")
+        val app = applicationContext as App
+
+        val score = HighScore(points = POINTS_FOR_PARTICIPATION,
+                              activityId = selectedGame.id,
+                              contestantId = contestant.id)
+        app.gameBackend.postContestantScore(contestant.slug!!, score)
+                       .subscribeOn(Schedulers.io())
+                       .subscribe{Log.d(TAG, "Posted score and got $it")}
     }
 
     override fun onContestFinished() {
@@ -96,6 +113,7 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
         val REQUEST_CODE_GET_CONTESTANTS = 1337
         val RESULT_CONTESTANTS = "RESULT_CONTESTANTS"
         val RESULT_CLEAR_GAME = "RESULT_CLEAR_GAME"
+        val POINTS_FOR_PARTICIPATION = 10
     }
 
     /**
