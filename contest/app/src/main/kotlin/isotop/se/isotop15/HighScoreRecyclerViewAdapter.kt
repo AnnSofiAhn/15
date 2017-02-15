@@ -86,7 +86,7 @@ class HighScoreRecyclerViewAdapter() : RecyclerView.Adapter<HighScoreRecyclerVie
 
             Log.d(TAG, "areItemsTheSame: $new vs $old")
 
-            if (old.contestant_id == new.contestant_id) {
+            if (old.contestantId == new.contestantId) {
                 return old.points == new.points
             } else {
                 return false

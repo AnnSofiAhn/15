@@ -42,6 +42,11 @@ class ContestantsRecyclerViewAdapter(val context: Context,
         return contestants
     }
 
+    fun clearContestants() {
+        contestants.clear()
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contestant = contestants[position]
         Log.d(TAG, "onBindViewHolder: $contestant at $position")

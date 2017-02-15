@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.MenuItem
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import isotop.se.isotop15.models.Contestant
@@ -100,6 +101,14 @@ class ContestantsActivity : AppCompatActivity() {
         }
     }
 
+    @OnClick(R.id.go_to_contest_button)
+    fun onNext() {
+        val intent = Intent()
+        intent.putExtra(MainActivity.RESULT_CONTESTANTS, adapter.getContestants())
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
     private fun getImageUrlFromName(it: Contestant): String {
         return baseImageUrl + it.name.hashCode() + imageUrlSuffix
     }
@@ -134,13 +143,6 @@ class ContestantsActivity : AppCompatActivity() {
     inner class MenuItemListener : Toolbar.OnMenuItemClickListener {
         override fun onMenuItemClick(item: MenuItem): Boolean {
             when (item.itemId) {
-                R.id.menu_forward -> {
-                    val intent = Intent()
-                    intent.putExtra(MainActivity.RESULT_CONTESTANTS, adapter.getContestants())
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
-                    return true
-                }
                 R.id.menu_back -> {
                     val intent = Intent()
                     intent.putExtra(MainActivity.RESULT_CLEAR_GAME, true)

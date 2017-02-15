@@ -36,13 +36,13 @@ class HighScoreFragment : Fragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({
-                    val ids = it.map{it.contestant_id}.distinct<Int>()
+                    val ids = it.map{it.contestantId }.distinct<Int>()
                     app.gameBackend.getContestants(ids = ids)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ contestants ->
                                 val scores = it.map { score ->
-                                    val c = contestants.find { it.id == score.contestant_id }
+                                    val c = contestants.find { it.id == score.contestantId }
                                     if (c != null) {
                                         score.copy(contestantName = c.name)
                                     } else{

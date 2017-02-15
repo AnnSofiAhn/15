@@ -61,20 +61,20 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d(TAG, "onActivityResult: $requestCode, $resultCode")
 
         when (requestCode) {
             REQUEST_CODE_SELECT_GAME -> {
                 selectedGame = Game.values()[resultCode]
                 toolbar.title = selectedGame.title
-                Log.d(TAG, "Selected $selectedGame")
                 sectionsPagerAdapter.destroyItem(viewPager.rootView, 0, null)
             }
             REQUEST_CODE_GET_CONTESTANTS -> {
                 if (resultCode == Activity.RESULT_OK) {
                     contestants.clear()
                     val results = data?.getParcelableArrayListExtra<Contestant>(RESULT_CONTESTANTS)
-                    results?.filterNotNull()?.forEach { contestants.add(it) }
+                    results?.filterNotNull()
+                            ?.distinctBy { it.slug }
+                            ?.forEach { contestants.add(it) }
 
                     val fragment = sectionsPagerAdapter.getItem(0) as ContestFragment
                     fragment.setContestants(contestants)
@@ -108,13 +108,11 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
         var highScoreFragment: HighScoreFragment? = null
 
         override fun getItem(position: Int): Fragment {
-            Log.d(TAG, "Getting item at $position")
 
             when (position) {
                 0 -> {
                     if (contestFragment == null) {
                         contestFragment = ContestFragment.newInstance(app, selectedGame)
-                        Log.d(TAG, "ContestFragment: $contestFragment")
                     }
                     return contestFragment as Fragment
                 }
@@ -148,7 +146,6 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
         }
 
         override fun destroyItem(container: View?, position: Int, item: Any?) {
-            Log.d(TAG, "destroyItem at $position")
             if (position == 0) {
                 contestFragment = null
             } else {

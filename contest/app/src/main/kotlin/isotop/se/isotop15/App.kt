@@ -6,6 +6,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.squareup.picasso.Picasso
 import isotop.se.isotop15.models.DronisBackend
 import isotop.se.isotop15.models.GameBackend
+import isotop.se.isotop15.models.SlotCarsBackend
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -18,6 +19,7 @@ class App: Application() {
 
     lateinit var gameBackend: GameBackend
     lateinit var dronisBackend: DronisBackend
+    lateinit var slotCarsBackend: SlotCarsBackend
 
     override fun onCreate() {
         super.onCreate()
@@ -46,5 +48,12 @@ class App: Application() {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
                 .create(DronisBackend::class.java)
+
+        slotCarsBackend = Retrofit.Builder()
+                .baseUrl("http://10.10.13.214:3000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+                .create(SlotCarsBackend::class.java)
     }
 }

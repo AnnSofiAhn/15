@@ -1,5 +1,6 @@
 package isotop.se.isotop15.contests
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,6 +13,8 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import isotop.se.isotop15.App
 import isotop.se.isotop15.ContestantsRecyclerViewAdapter
 import isotop.se.isotop15.R
@@ -38,7 +41,7 @@ class SlotCarsFragment(app: App): ContestFragment(app) {
         ButterKnife.bind(this, rootView)
 
         adapter = ContestantsRecyclerViewAdapter(context)
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        recyclerView.layoutManager = GridLayoutManager(context, 1)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
         recyclerView.addItemDecoration(MarginItemDecoration(resources))
@@ -52,14 +55,17 @@ class SlotCarsFragment(app: App): ContestFragment(app) {
     override fun onResume() {
         super.onResume()
 
-        Log.d(TAG, "onResume: ${contestants.size}")
-        contestants.forEach {
-            adapter.addContestant(it)
+        val contestant = contestants.firstOrNull()
+        if (contestant != null){
+            Log.d(TAG, "onResume: $contestant")
+            adapter.clearContestants()
+            adapter.addContestant(contestant)
         }
     }
 
     override fun contestantsUpdated() {
         Log.d(TAG, "contestantsUpdated")
+
     }
 
     override fun getActivityId(): Int {
@@ -68,9 +74,38 @@ class SlotCarsFragment(app: App): ContestFragment(app) {
 
     @OnClick(R.id.contest_button)
     fun sendContestantToBackend() {
-        val contestant = contestants.getOrNull(0)
+        val contestant = contestants.firstOrNull()
         if (contestant != null) {
             // Send to the backend, listen
+            app.slotCarsBackend.startPlaying(contestant.slug!!)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        Log.d(TAG, "Got something back! $it")
+                        val color = getControllerColor(it.controller)
+                        val message = it.error ?: "${it.name} har $color kontroll"
+                        AlertDialog.Builder(context)
+                                .setMessage(message)
+                                .setPositiveButton(android.R.string.ok, {ignore, id ->
+                                    callback.onContestFinished()
+                                })
+                                .create()
+                                .show()
+                    }, {
+                        Log.w(TAG, "Got an error when entering a player into the game", it)
+                    })
+        }
+    }
+
+    private fun getControllerColor(id: Int): String {
+        return when (id) {
+            0 -> "grön"
+            1 -> "röd"
+            2 -> "orange"
+            3 -> "vit"
+            4 -> "gul"
+            5 -> "blå"
+            else -> "okänd"
         }
     }
 
