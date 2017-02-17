@@ -7,13 +7,15 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
@@ -29,11 +31,13 @@ class ContestantsActivity : AppCompatActivity() {
     @BindView(R.id.grid) lateinit var recyclerView: RecyclerView
     @BindView(R.id.toolbar) lateinit var toolbar: Toolbar
     @BindView(R.id.main_content) lateinit var coordinatorLayout: CoordinatorLayout
+    @BindView(R.id.go_to_contest_button) lateinit var fab: FloatingActionButton
+    @BindView(R.id.contestants_info_view) lateinit var infoView: TextView
 
     lateinit var adapter: ContestantsRecyclerViewAdapter
     private lateinit var nfcAdapter: NfcAdapter
     val baseImageUrl = "https://robohash.org/"
-    val imageUrlSuffix = ".png?size=256x256&"
+    val imageUrlSuffix = ".png?size=256x256"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +51,6 @@ class ContestantsActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(MarginItemDecoration(resources))
 
         toolbar.title = "Välj deltagare"
-        toolbar.inflateMenu(R.menu.contestants)
-        toolbar.setOnMenuItemClickListener(MenuItemListener())
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
     }
@@ -94,6 +96,8 @@ class ContestantsActivity : AppCompatActivity() {
                         Log.d(TAG, "Got something: $it")
                         addContestant(it.copy(image = getImageUrlFromName(it)))
                         snackbar.dismiss()
+                        infoView.visibility = View.GONE
+                        fab.show()
                     }, {
                         Log.w(TAG, "Couldn't get the user from the tag ID", it)
                         snackbar.setText("Kunde inte hämta deltagaren")
@@ -116,6 +120,11 @@ class ContestantsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         setupForegroundDispatch()
+
+        if (adapter.getContestants().isEmpty()) {
+            fab.hide()
+            infoView.visibility = View.VISIBLE
+        }
     }
 
     override fun onPause() {
@@ -138,21 +147,5 @@ class ContestantsActivity : AppCompatActivity() {
     private fun actionIsOurs(intent: Intent): Boolean {
         return NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action
                 || NfcAdapter.ACTION_TAG_DISCOVERED == intent.action
-    }
-
-    inner class MenuItemListener : Toolbar.OnMenuItemClickListener {
-        override fun onMenuItemClick(item: MenuItem): Boolean {
-            when (item.itemId) {
-                R.id.menu_back -> {
-                    val intent = Intent()
-                    intent.putExtra(MainActivity.RESULT_CLEAR_GAME, true)
-                    setResult(Activity.RESULT_CANCELED, intent)
-                    finish()
-                    return false
-                }
-                else -> return false
-            }
-        }
-
     }
 }

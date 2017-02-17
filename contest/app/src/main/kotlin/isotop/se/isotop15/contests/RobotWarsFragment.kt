@@ -48,6 +48,7 @@ class RobotWarsFragment(app: App): ContestFragment(app), ContestantClickListener
         super.onResume()
 
         Log.d(TAG, "onResume: ${contestants.size}")
+        adapter.clearContestants()
         contestants.forEach {
             adapter.addContestant(it)
         }
@@ -55,6 +56,9 @@ class RobotWarsFragment(app: App): ContestFragment(app), ContestantClickListener
 
     override fun contestantsUpdated() {
         Log.d(TAG, "contestantsUpdated")
+        contestants.forEach {
+            postParticipationForContestant(it)
+        }
     }
 
     override fun getActivityId(): Int {
@@ -68,15 +72,12 @@ class RobotWarsFragment(app: App): ContestFragment(app), ContestantClickListener
 
     @OnClick(R.id.contest_button)
     fun onDraw() {
-        Log.d(TAG, "Matchen slutade lika")
-        contestants.forEach {
-            postScoreForContestant(it, POINTS_FOR_DRAW)
-        }
+        Log.d(TAG, "Matchen slutade lika, inga poäng!")
+        callback.onContestFinished()
     }
 
     companion object {
         val TAG = "RobotWarsFragment"
         val POINTS_FOR_WINNING = 5
-        val POINTS_FOR_DRAW = 1
     }
 }

@@ -54,7 +54,7 @@ class ContestantsRecyclerViewAdapter(val context: Context,
 
         Picasso.with(context)
                 .load(contestant.image)
-                .error(R.drawable.ic_person_add_black_24dp)
+                .error(R.drawable.ic_person_black_24dp)
                 .into(holder.imageView,
                       PicassoPalette.with(contestant.image, holder.imageView)
                               .intoCallBack { palette ->

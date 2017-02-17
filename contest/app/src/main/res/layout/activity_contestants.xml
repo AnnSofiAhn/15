@@ -5,25 +5,41 @@
                                                  xmlns:tools="http://schemas.android.com/tools"
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
+                                                 android:background="@color/backgroundPrimary"
                                                  android:fitsSystemWindows="true"
                                                  tools:activity="isotop.se.isotop15.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/grid"
-        android:name="isotop.se.dronetimer.ContestantsFragment"
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:clipToPadding="false"
-        app:layoutManager="GridLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:activity="isotop.se.isotop15.ContestantsActivity"
-        tools:listitem="@layout/item_contestant"/>
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/contestants_info_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:text="Lägg till användare genom att blippa armbandet bakom telefonen"
+            android:textSize="18sp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/grid"
+            android:name="isotop.se.dronetimer.ContestantsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:clipToPadding="false"
+            app:layoutManager="GridLayoutManager"
+            tools:activity="isotop.se.isotop15.ContestantsActivity"
+            tools:layout_height="256dp"
+            tools:listitem="@layout/item_contestant"/>
+    </LinearLayout>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

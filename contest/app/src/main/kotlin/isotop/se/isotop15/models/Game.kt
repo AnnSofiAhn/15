@@ -9,5 +9,6 @@ enum class Game(val title: String, val id: Int) {
     SLOT_CARS("Slot cars", 2),
     ROBOT_WARS("Robot wars", 3),
     VR("VR", 4),
+    OTHER("Övriga tävlingar", 5),
     NONE("Ingen tävling vald", -1)
 }

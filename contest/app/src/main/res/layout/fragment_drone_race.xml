@@ -1,14 +1,18 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:activity="isotop.se.isotop15.MainActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:activity="isotop.se.isotop15.MainActivity">
 
     <TextView
         android:id="@+id/contestant_label"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -22,6 +26,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/contestant_label"
         android:textAppearance="@android:style/TextAppearance.Material.Display1"
         tools:text="Para Goomba"/>
 
@@ -29,36 +34,43 @@
         android:id="@+id/info_view"
         android:layout_width="match_parent"
         android:layout_height="128dp"
+        android:layout_below="@id/contestant_name_view"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        tools:text="Här är det en del text om hur det går i tävlingen just nu"/>
 
     <Button
         android:id="@+id/start_race_button"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/info_view"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="72dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:paddingBottom="32dp"
+        android:paddingTop="32dp"
         android:text="Starta racet"/>
 
     <Button
         android:id="@+id/end_race_button"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/start_race_button"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="72dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:text="Skicka in resultat"
-        android:visibility="gone"/>
+        android:enabled="false"
+        android:paddingBottom="32dp"
+        android:paddingTop="32dp"
+        android:text="Skicka in resultat"/>
 
-</LinearLayout>
+</RelativeLayout>

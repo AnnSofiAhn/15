@@ -93,6 +93,8 @@ class SlotCarsFragment(app: App): ContestFragment(app) {
                                     }, {
                                         Log.w(TAG, "Got an error when asking the slot cars backend to refresh users", it)
                                     })
+                        } else {
+                            postParticipationForContestant(contestant)
                         }
 
                         AlertDialog.Builder(context)

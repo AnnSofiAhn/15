@@ -42,6 +42,11 @@ class SelectGameActivity : AppCompatActivity() {
         returnWithResult(Game.VR)
     }
 
+    @OnClick(R.id.others_button)
+    fun onOthersClicked() {
+        returnWithResult(Game.OTHER)
+    }
+
     private fun returnWithResult(game: Game) {
         Log.d(TAG, "Returning $game")
         setResult(game.ordinal)

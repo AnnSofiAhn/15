@@ -14,7 +14,7 @@ data class HighScore(val id: Int? = null,
                      @SerializedName("updated_at") val updatedAt: String? = null,
                      @SerializedName("activity_id") val activityId: Int,
                      @SerializedName("contestant_id") val contestantId: Int,
-                     @SerializedName("laptime") val lapTime: String? = null,
+                     @SerializedName("lap_time") val lapTime: String? = null,
                      val contestantName: String = "") : Comparable<HighScore> {
 
     // This actually returns inverted, to support sorting by descending scores

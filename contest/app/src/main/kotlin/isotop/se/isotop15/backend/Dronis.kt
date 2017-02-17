@@ -1,6 +1,7 @@
-package isotop.se.isotop15.models
+package isotop.se.isotop15.backend
 
 import io.reactivex.Observable
+import isotop.se.isotop15.models.DronisResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -9,7 +10,7 @@ import retrofit2.http.Query
  *
  * Created on 17/02/10.
  */
-interface DronisBackend {
+interface Dronis {
     @GET("start")
     fun startGame(): Observable<DronisResponse>
 

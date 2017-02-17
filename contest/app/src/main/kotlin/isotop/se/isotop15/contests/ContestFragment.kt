@@ -9,6 +9,7 @@ import isotop.se.isotop15.App
 import isotop.se.isotop15.models.Contestant
 import isotop.se.isotop15.models.Game
 import isotop.se.isotop15.models.HighScore
+import isotop.se.isotop15.models.Participation
 import java.util.*
 
 /**
@@ -48,24 +49,39 @@ abstract class ContestFragment(val app: App) : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                               Log.d(DroneRaceFragment.TAG, "What did we get back? $it")
+                               Log.d(TAG, "Uploaded score, got this back: $it")
                                callback.onContestFinished()
                            }, {
                                // TODO: Skicka upp en snackbar?
-                               Log.w(DroneRaceFragment.TAG, "Couldn't post score", it)
+                               Log.w(TAG, "Couldn't post score", it)
                            })
+    }
+
+    fun postParticipationForContestant(contestant: Contestant) {
+        val participation = Participation(activityId = getActivityId(),
+                                          contestantId = contestant.id)
+        app.gameBackend.postContestantParticipation(contestant.slug!!, participation)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    Log.d(TAG, "Uploaded participation, got this back: $it")
+                }, {
+                    Log.w(TAG, "Couldn't post participation", it)
+                })
     }
 
     abstract protected fun contestantsUpdated()
     abstract protected fun getActivityId(): Int
 
     companion object {
+        val TAG = "ContestFragment"
         fun newInstance(app: App, game: Game): ContestFragment {
             val fragment = when (game) {
                 Game.DRONE_RACE -> DroneRaceFragment(app)
                 Game.SLOT_CARS -> SlotCarsFragment(app)
                 Game.ROBOT_WARS -> RobotWarsFragment(app)
                 Game.VR -> VrFragment(app)
+                Game.OTHER -> OtherContestsFragment(app)
                 Game.NONE -> TODO()
             }
 

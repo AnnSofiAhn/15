@@ -45,13 +45,35 @@ class DroneRaceFragment(app: App) : ContestFragment(app) {
         return rootView
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        Log.d(TAG, "onResume, contestants: ${contestants.size}")
+        val contestant = contestants.getOrNull(0)
+        contestantNameView.text = contestant?.name ?: "Starta om, något är fel"
+
+        if (lastResponse == null) {
+            infoView.text = "Redo att starta spelet"
+            startRaceButton.text = "Starta racet"
+            endRaceButton.isEnabled = false
+            startRaceButton.isEnabled = true
+        }
+    }
+
     @OnClick(R.id.start_race_button)
     fun startRaceClicked() {
-        infoView.text = "Nu startar racet!"
-        app.dronisBackend.startGame()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(StartRaceConsumer(app), StartRaceErrorConsumer())
+        if (lastResponse != null) {
+            // restart, as in go back to contestant selection
+            callback.onContestFinished()
+        } else {
+            infoView.text = "Nu startar racet!"
+            startRaceButton.text = "Starta om"
+            endRaceButton.isEnabled = false
+            app.dronisBackend.startGame()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(StartRaceConsumer(app), StartRaceErrorConsumer())
+        }
     }
 
     @OnClick(R.id.end_race_button)
@@ -62,22 +84,9 @@ class DroneRaceFragment(app: App) : ContestFragment(app) {
         postScoreForContestant(contestant, POINTS_FOR_COMPLETION, lapTime?.toString())
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        Log.d(TAG, "onResume, contestants: ${contestants.size}")
-        val contestant = contestants.getOrNull(0)
-        contestantNameView.text = contestant?.name ?: "Starta om, något är fel"
-
-        if (lastResponse == null) {
-            infoView.text = "Redo att starta spelet"
-            endRaceButton.visibility = View.GONE
-            startRaceButton.visibility = View.VISIBLE
-        }
-    }
-
     override fun contestantsUpdated() {
         lastResponse = null
+        postParticipationForContestant(contestants.first())
         Log.d(TAG, "contestantsUpdated: ${contestants.size}")
     }
 
@@ -94,8 +103,6 @@ class DroneRaceFragment(app: App) : ContestFragment(app) {
         override fun accept(it: DronisResponse) {
             Log.d(TAG, "Started the drone race: $it")
             infoView.text = "${it.data.devices.size} waypoints på banan"
-            startRaceButton.visibility = View.GONE
-            endRaceButton.visibility = View.VISIBLE
             endRaceButton.isEnabled = false
 
             lastResponse = it
@@ -110,6 +117,7 @@ class DroneRaceFragment(app: App) : ContestFragment(app) {
                             infoView.text = "Banan avklarad på ${it.data.duration} sekunder"
                             subscription?.dispose()
                             endRaceButton.isEnabled = true
+                            startRaceButton.isEnabled = false
                         } else {
                             val left = it.data.devices.size - it.data.hits.size
                             infoView.text = "$left waypoints kvar"

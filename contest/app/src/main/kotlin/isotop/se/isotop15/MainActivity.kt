@@ -13,14 +13,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
 import butterknife.BindView
 import butterknife.ButterKnife
-import io.reactivex.schedulers.Schedulers
 import isotop.se.isotop15.contests.ContestCallbacks
 import isotop.se.isotop15.contests.ContestFragment
 import isotop.se.isotop15.models.Contestant
 import isotop.se.isotop15.models.Game
-import isotop.se.isotop15.models.HighScore
 import java.util.*
 
 class MainActivity : AppCompatActivity(), ContestCallbacks {
@@ -28,10 +27,8 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
     val TAG = "MainActivity"
 
     @BindView(R.id.toolbar) lateinit var toolbar: Toolbar
-    @BindView(R.id.container) lateinit var viewPager: ViewPager
-    @BindView(R.id.tabs) lateinit var tabLayout: TabLayout
+    @BindView(R.id.fragment_container) lateinit var container: FrameLayout
 
-    private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
     private var selectedGame = Game.NONE
     private val contestants = ArrayList<Contestant>()
 
@@ -41,10 +38,6 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
         ButterKnife.bind(this)
 
         setSupportActionBar(toolbar)
-
-        sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-        viewPager.adapter = sectionsPagerAdapter
-        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun onResume() {
@@ -68,7 +61,7 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
             REQUEST_CODE_SELECT_GAME -> {
                 selectedGame = Game.values()[resultCode]
                 toolbar.title = selectedGame.title
-                sectionsPagerAdapter.destroyItem(viewPager.rootView, 0, null)
+
             }
             REQUEST_CODE_GET_CONTESTANTS -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -78,28 +71,20 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
                             ?.distinctBy { it.slug }
                             ?.forEach {
                                 contestants.add(it)
-                                postScoreForParticipation(it)
                             }
 
-                    val fragment = sectionsPagerAdapter.getItem(0) as ContestFragment
+                    val app = applicationContext as App
+                    val fragment = ContestFragment.newInstance(app, selectedGame)
                     fragment.setContestants(contestants)
+
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.fragment_container, fragment)
+                    transaction.commit()
                 } else {
                     selectedGame = Game.NONE
                 }
             }
         }
-    }
-
-    private fun postScoreForParticipation(contestant: Contestant) {
-        Log.d(TAG, "postScoreForParticipation: $contestant")
-        val app = applicationContext as App
-
-        val score = HighScore(points = POINTS_FOR_PARTICIPATION,
-                              activityId = selectedGame.id,
-                              contestantId = contestant.id)
-        app.gameBackend.postContestantScore(contestant.slug!!, score)
-                       .subscribeOn(Schedulers.io())
-                       .subscribe{Log.d(TAG, "Posted score and got $it")}
     }
 
     override fun onContestFinished() {
@@ -112,8 +97,6 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
         val REQUEST_CODE_SELECT_GAME = 42
         val REQUEST_CODE_GET_CONTESTANTS = 1337
         val RESULT_CONTESTANTS = "RESULT_CONTESTANTS"
-        val RESULT_CLEAR_GAME = "RESULT_CLEAR_GAME"
-        val POINTS_FOR_PARTICIPATION = 10
     }
 
     /**

@@ -32,9 +32,12 @@
         android:id="@+id/instructions_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_marginTop="16dp"
         android:text="Klicka på den tävlande som vann när matchen är slut. Om matchen slutade oavgjort klickar du på knappen nedanför."
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textSize="18sp"/>
 
     <Button
         android:id="@+id/contest_button"
@@ -44,5 +47,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
+        android:padding="16dp"
         android:text="Oavgjort"/>
 </LinearLayout>

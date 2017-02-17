@@ -7,34 +7,33 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import isotop.se.isotop15.App
 import isotop.se.isotop15.ContestantsRecyclerViewAdapter
 import isotop.se.isotop15.R
-import isotop.se.isotop15.models.Game
+import isotop.se.isotop15.models.Participation
 import isotop.se.isotop15.utils.MarginItemDecoration
 
 /**
  * @author Ann-Sofi Åhn
  *
- * Created on 17/02/13.
+ * Created on 17/02/16.
  */
-class VrFragment(app: App): ContestFragment(app) {
+class OtherContestsFragment(app: App): ContestFragment(app) {
 
     @BindView(R.id.contestants_grid) lateinit var recyclerView: RecyclerView
-    @BindView(R.id.contest_button) lateinit var finishButton: Button
-    @BindView(R.id.instructions_view) lateinit var instructionsView: TextView
+    @BindView(R.id.other_contests_spinner) lateinit var spinner: Spinner
 
     lateinit var adapter: ContestantsRecyclerViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_contest_simple, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_contest_others, container, false)
         ButterKnife.bind(this, rootView)
 
         adapter = ContestantsRecyclerViewAdapter(context)
@@ -43,8 +42,11 @@ class VrFragment(app: App): ContestFragment(app) {
         recyclerView.setHasFixedSize(true)
         recyclerView.addItemDecoration(MarginItemDecoration(resources))
 
-        finishButton.text = "Byt tävlande"
-        instructionsView.text = "Klicka på knappen nedan när VR-upplevelsen är över för att byta tävlande"
+        val adapter = ArrayAdapter.createFromResource(context,
+                                                      R.array.contests_other_names,
+                                                      android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
 
         return rootView
     }
@@ -62,19 +64,21 @@ class VrFragment(app: App): ContestFragment(app) {
 
     @OnClick(R.id.contest_button)
     fun onFinishClicked() {
+        postParticipationForContestant(contestants.first())
         callback.onContestFinished()
     }
 
     override fun contestantsUpdated() {
         Log.d(TAG, "contestantsUpdated")
-        postParticipationForContestant(contestants.first())
     }
 
     override fun getActivityId(): Int {
-        return Game.VR.id
+        Log.d(TAG, "getActivityId")
+        return (spinner.selectedItemId + OFFSET).toInt()
     }
 
     companion object {
-        val TAG = "VrFragment"
+        val TAG = "OtherContestsFragment"
+        val OFFSET = 5
     }
 }
