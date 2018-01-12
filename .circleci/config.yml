@@ -8,6 +8,7 @@ jobs:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
+          pwd: contest/
       - restore_cache:
           key: jars-{{ checksum  "contest/app/build.gradle" }}
       - run:
