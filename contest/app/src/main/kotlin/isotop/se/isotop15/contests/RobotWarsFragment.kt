@@ -35,7 +35,7 @@ class RobotWarsFragment(app: App): ContestFragment(app), ContestantClickListener
         val rootView = inflater.inflate(R.layout.fragment_contest_simple, container, false)
         ButterKnife.bind(this, rootView)
 
-        adapter = ContestantsRecyclerViewAdapter(context, this)
+        adapter = ContestantsRecyclerViewAdapter(context!!, this)
         recyclerView.layoutManager = GridLayoutManager(context, 2)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)

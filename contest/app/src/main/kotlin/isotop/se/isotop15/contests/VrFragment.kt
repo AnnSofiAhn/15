@@ -37,7 +37,7 @@ class VrFragment(app: App): ContestFragment(app) {
         val rootView = inflater.inflate(R.layout.fragment_contest_simple, container, false)
         ButterKnife.bind(this, rootView)
 
-        adapter = ContestantsRecyclerViewAdapter(context)
+        adapter = ContestantsRecyclerViewAdapter(context!!)
         recyclerView.layoutManager = GridLayoutManager(context, 1)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)

@@ -38,10 +38,11 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/libraries
+contest/.idea/
+contest/.idea/workspace.xml
+contest/.idea/tasks.xml
+contest/.idea/gradle.xml
+contest/.idea/libraries
 
 # Keystore files
 *.jks

@@ -24,7 +24,7 @@ import java.util.*
  *
  * Created on 17/01/27.
  */
-class ContestantsRecyclerViewAdapter(val context: Context,
+class ContestantsRecyclerViewAdapter(private val context: Context,
                                      val listener: ContestantClickListener? = null) : RecyclerView.Adapter<ViewHolder>() {
 
     val TAG = "ContestantsStuff"
@@ -52,7 +52,8 @@ class ContestantsRecyclerViewAdapter(val context: Context,
         Log.d(TAG, "onBindViewHolder: $contestant at $position")
         holder.nameView.text = contestant.name
 
-        Picasso.with(context)
+        Picasso.Builder(context)
+                .build()
                 .load(contestant.image)
                 .error(R.drawable.ic_person_black_24dp)
                 .into(holder.imageView,

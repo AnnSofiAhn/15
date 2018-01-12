@@ -3,12 +3,10 @@ package isotop.se.isotop15
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -122,7 +120,7 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
             }
         }
 
-        override fun getItemPosition(item: Any?): Int {
+        override fun getItemPosition(item: Any): Int {
             return PagerAdapter.POSITION_NONE
         }
 
@@ -146,7 +144,7 @@ class MainActivity : AppCompatActivity(), ContestCallbacks {
             }
         }
 
-        override fun destroyItem(container: View?, position: Int, item: Any?) {
+        override fun destroyItem(container: View, position: Int, item: Any) {
             if (position == 0) {
                 contestFragment = null
             } else {

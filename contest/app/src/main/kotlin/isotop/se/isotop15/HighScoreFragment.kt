@@ -32,30 +32,33 @@ class HighScoreFragment : Fragment() {
         view.setHasFixedSize(true)
 
         val app = context.applicationContext as App
-        app.gameBackend.getScores(arguments.getInt(ARG_ACTIVITY_ID))
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe({
-                    val ids = it.map{it.contestantId }.distinct<Int>()
-                    app.gameBackend.getContestants(ids = ids)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ contestants ->
-                                val scores = it.map { score ->
-                                    val c = contestants.find { it.id == score.contestantId }
-                                    if (c != null) {
-                                        score.copy(contestantName = c.name)
-                                    } else{
-                                        score
+
+        if (arguments != null) {
+            app.gameBackend.getScores(arguments!!.getInt(ARG_ACTIVITY_ID))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .subscribe({
+                        val ids = it.map { it.contestantId }.distinct<Int>()
+                        app.gameBackend.getContestants(ids = ids)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ contestants ->
+                                    val scores = it.map { score ->
+                                        val c = contestants.find { it.id == score.contestantId }
+                                        if (c != null) {
+                                            score.copy(contestantName = c.name)
+                                        } else {
+                                            score
+                                        }
                                     }
-                                }
-                                adapter.setScores(scores)
-                            }, {
-                                Log.d("HighScoreFragment", "Got an error!", it)
-                            })
+                                    adapter.setScores(scores)
+                                }, {
+                                    Log.d("HighScoreFragment", "Got an error!", it)
+                                })
                     }, {
-                    Log.d("HighScoreFragment", "Got some error here", it)
-                })
+                        Log.d("HighScoreFragment", "Got some error here", it)
+                    })
+        }
 
         return view
     }
