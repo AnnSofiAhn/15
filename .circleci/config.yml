@@ -9,8 +9,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          working_directory: contest/
-          key: jars-{{ checksum  "app/build.gradle" }}
+          key: jars-{{ checksum  "contest/app/build.gradle" }}
       - run:
           name: Download Dependencies
           working_directory: contest/
@@ -18,7 +17,7 @@ jobs:
       - save_cache:
           paths:
             - ~/contest/.gradle
-          key: jars-{{ checksum  "app/build.gradle" }}
+          key: jars-{{ checksum  "contest/app/build.gradle" }}
       - run:
           name: Run Tests
           working_directory: contest/
