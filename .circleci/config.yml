@@ -9,18 +9,19 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          ppath: contest/
+          working_directory: contest/
           key: jars-{{ checksum  "app/build.gradle" }}
       - run:
           name: Download Dependencies
+          working_directory: contest/
           command: ./gradlew androidDependencies
       - save_cache:
           paths:
-            - ~/.gradle
+            - ~/contest/.gradle
           key: jars-{{ checksum  "app/build.gradle" }}
       - run:
           name: Run Tests
-          path: contest/
+          working_directory: contest/
           command: ./gradlew lint test
       - store_artifacts:
           path: contest/app/build/reports
@@ -29,5 +30,5 @@ jobs:
           path: contest/app/build/test-results
       - run:
           name: Assemble debug build
-          path: contest/
+          working_directory: contest/
           command: ./gradlew assembleDebug
