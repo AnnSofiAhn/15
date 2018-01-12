@@ -2,12 +2,12 @@ package isotop.se.isotop15
 
 import android.app.Application
 import android.util.Log
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.squareup.picasso.Picasso
 import isotop.se.isotop15.backend.Dronis
 import isotop.se.isotop15.backend.Kiki
 import isotop.se.isotop15.backend.SlotCars
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
