@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/code
+    working_directory: ~/contest
     docker:
       - image: circleci/android:api-27-alpha
     environment:
@@ -25,5 +25,6 @@ jobs:
           destination: reports
       - store_test_results:
           path: app/build/test-results
-
-
+      -run:
+          name: Assemble debug build
+          command: ./gradlew assembleDebug
