@@ -10,21 +10,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="af302ed4-89bd-4d34-9905-48e99c5c8535" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../.gitignore" afterPath="$PROJECT_DIR$/../.gitignore" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/ContestantsRecyclerViewAdapter.kt" afterPath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/ContestantsRecyclerViewAdapter.kt" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/HighScoreFragment.kt" afterPath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/HighScoreFragment.kt" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/MainActivity.kt" afterPath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/MainActivity.kt" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/contests/OtherContestsFragment.kt" afterPath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/contests/OtherContestsFragment.kt" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/contests/RobotWarsFragment.kt" afterPath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/contests/RobotWarsFragment.kt" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/contests/SlotCarsFragment.kt" afterPath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/contests/SlotCarsFragment.kt" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/contests/VrFragment.kt" afterPath="$PROJECT_DIR$/app/src/main/kotlin/isotop/se/isotop15/contests/VrFragment.kt" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" />
-    </list>
+    <list default="true" id="af302ed4-89bd-4d34-9905-48e99c5c8535" name="Default" comment="" />
     <ignored path="Drone Timer.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -2813,7 +2799,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1440" y="0" width="1920" height="1200" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2830,7 +2815,7 @@
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.185836" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.185836" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.49574015" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960597" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973376" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
